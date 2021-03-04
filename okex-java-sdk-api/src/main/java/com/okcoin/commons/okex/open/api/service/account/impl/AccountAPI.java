@@ -20,65 +20,65 @@ import java.util.List;
  */
 public interface AccountAPI {
     //资金账户信息
-    @GET("/api/account/v3/wallet")
+    @GET("/api/account/v5/wallet")
     Call<List<Wallet>> getWallet();
 
     //单个币种账户信息
-    @GET("/api/account/v3/wallet/{currency}")
+    @GET("/api/account/v5/wallet/{currency}")
     Call<List<Wallet>> getWallet(@Path("currency") String currency);
 
     //资金划转
-    @POST("/api/account/v3/transfer")
+    @POST("/api/account/v5/transfer")
     Call<JSONObject> transfer(@Body JSONObject jsonObject);
 
     //提币
-    @POST("/api/account/v3/withdrawal")
+    @POST("/api/account/v5/withdrawal")
     Call<JSONObject> withdraw(@Body JSONObject jsonObject);
 
     //账单流水查询
-    @GET("/api/account/v3/ledger")
+    @GET("/api/account/v5/ledger")
     Call<JSONArray> getLedger(@Query("currency") String currency,@Query("after") String after,
                               @Query("before") String before,  @Query("limit") String limit,@Query("type") String type);
 
     //获取充值地址
-    @GET("/api/account/v3/deposit/address")
+    @GET("/api/account/v5/deposit/address")
     Call<JSONArray> getDepositAddress(@Query("currency") String currency);
 
     //获取账户资产估值
-    @GET("/api/account/v3/asset-valuation")
+    @GET("/api/account/v5/asset-valuation")
     Call<JSONObject> getAllAccount(@Query("account_type") String account_type,
                                    @Query("valuation_currency") String valuation_currency);
 
     //获取子账户余额信息
-    @GET("/api/account/v3/sub-account")
+    @GET("/api/account/v5/sub-account")
     Call<String> getSubAccount(@Query("sub-account") String sub_account);
 
     //查询所有币种提币记录
-    @GET("/api/account/v3/withdrawal/history")
+    @GET("/api/account/v5/withdrawal/history")
     Call<JSONArray> getWithdrawalHistory();
 
     //查看单个币种提币记录
-    @GET("/api/account/v3/withdrawal/history/{currency}")
+    @GET("/api/account/v5/withdrawal/history/{currency}")
     Call<JSONArray> getWithdrawalHistory(@Path("currency") String currency);
 
     //获取所有币种充值记录
-    @GET("/api/account/v3/deposit/history")
+    @GET("/api/account/v5/deposit/history")
     Call<String> getDepositHistory();
 
     //获取单个币种充值记录
-    @GET("/api/account/v3/deposit/history/{currency}")
+    @GET("/api/account/v5/deposit/history/{currency}")
     Call<String> getDepositHistory(@Path("currency") String currency);
 
     //获取币种列表
-    @GET("/api/account/v3/currencies")
+    @GET("/api/account/v5/currencies")
     Call<List<Currency>> getCurrencies();
 
     //提币手续费
-    @GET("/api/account/v3/withdrawal/fee")
+    @GET("/api/account/v5/withdrawal/fee")
     Call<List<WithdrawFee>> getWithdrawFee(@Query("currency") String currency);
 
     //余币宝申购赎回
-    @POST("/api/account/v3/purchase_redempt")
+    @POST("/api/account/v5/purchase_redempt")
     Call<JSONObject> purchaseRedempt(@Body JSONObject jsonObject);
 
 }

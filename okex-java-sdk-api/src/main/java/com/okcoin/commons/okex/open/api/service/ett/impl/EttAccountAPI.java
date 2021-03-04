@@ -15,13 +15,13 @@ import java.util.List;
  */
 interface EttAccountAPI {
 
-    @GET("/api/ett/v3/accounts")
+    @GET("/api/ett/v5/accounts")
     Call<List<EttAccount>> getAccount();
 
-    @GET("/api/ett/v3/accounts/{currency}")
+    @GET("/api/ett/v5/accounts/{currency}")
     Call<EttAccount> getAccount(@Path("currency") String currency);
 
-    @GET("/api/ett/v3/accounts/{currency}/ledger")
+    @GET("/api/ett/v5/accounts/{currency}/ledger")
     Call<List<EttLedger>> getLedger(@Path("currency") String currency, @Query("before") String before, @Query("after") String after, @Query("limit") int limit);
 
 }
