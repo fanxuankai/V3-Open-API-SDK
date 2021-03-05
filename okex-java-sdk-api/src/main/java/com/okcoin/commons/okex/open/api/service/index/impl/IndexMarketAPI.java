@@ -7,7 +7,7 @@ import retrofit2.http.Path;
 interface IndexMarketAPI {
 
     //公共-获取指数成分
-    @GET("/api/index/v5/{instrument_id}/constituents")
+    @GET("/api/v5/index/{instrument_id}/constituents")
     Call<String> getIndex(@Path("instrument_id") String instrument_id);
 
 }

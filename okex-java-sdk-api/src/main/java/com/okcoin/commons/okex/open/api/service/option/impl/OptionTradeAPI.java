@@ -11,71 +11,71 @@ import java.util.List;
 public interface OptionTradeAPI {
 
     //单个标的指数持仓信息
-    @GET("/api/option/v5/{underlying}/position")
+    @GET("/api/v5/option/{underlying}/position")
     Call<JSONObject> getPosition(@Path("underlying") String underlying,@Query("instrument_id") String instrument_id);
 
     //单个标的物账户信息
-    @GET("/api/option/v5/accounts/{underlying}")
+    @GET("/api/v5/option/accounts/{underlying}")
     Call<JSONObject> getAccount(@Path("underlying") String underlying);
 
     //下单
-    @POST("/api/option/v5/order")
+    @POST("/api/v5/option/order")
     Call<JSONObject> placeOrder(@Body OrderParam orderParam);
 
     //批量下单
-    @POST("/api/option/v5/orders")
+    @POST("/api/v5/option/orders")
     Call<JSONObject> placeOrders(@Body OrderDataParam orderDataParam);
 
     //撤单（通过order_id）
-    @POST("/api/option/v5/cancel_order/{underlying}/{order_id}")
+    @POST("/api/v5/option/cancel_order/{underlying}/{order_id}")
     Call<JSONObject> cancelOrderByOrderId(@Path("underlying") String underlying,@Path("order_id") String order_id);
 
     //撤单（通过client_oid）
-    @POST("/api/option/v5/cancel_order/{underlying}/{client_oid}")
+    @POST("/api/v5/option/cancel_order/{underlying}/{client_oid}")
     Call<JSONObject> cancelOrderByClientOid(@Path("underlying") String underlying, @Path("client_oid") String client_oid);
 
     //撤销全部订单
-    @POST("/api/option/v5/cancel_all/{underlying}")
+    @POST("/api/v5/option/cancel_all/{underlying}")
     Call<JSONObject> cancelAll(@Path("underlying") String underlying);
 
     //批量撤单（通过order_id）
-    @POST("/api/option/v5/cancel_batch_orders/{underlying}")
+    @POST("/api/v5/option/cancel_batch_orders/{underlying}")
     Call<JSONObject> cancelBatchOrdersByOrderId(@Path("underlying") String underlying, @Body CancelOrders cancelOrders);
 
     //批量撤单（通过client_oid）
-    @POST("/api/option/v5/cancel_batch_orders/{underlying}")
+    @POST("/api/v5/option/cancel_batch_orders/{underlying}")
     Call<JSONObject> cancelBatchOrdersByClientOid(@Path("underlying") String underlying, @Body CancelOrders cancelOrders);
 
     //修改订单(通过order_id)
-    @POST("/api/option/v5/amend_order/{underlying}")
+    @POST("/api/v5/option/amend_order/{underlying}")
     Call<JSONObject> amendOrderByOrderId(@Path("underlying") String underlying,
                                 @Body AmentDate amentDate);
 
     //修改订单(通过client_oid)
-    @POST("/api/option/v5/amend_order/{underlying}")
+    @POST("/api/v5/option/amend_order/{underlying}")
     Call<JSONObject> amendOrderByClientOid(@Path("underlying") String underlying,
                                 @Body AmentDate amentDate);
 
     //批量修改订单(通过order_id)
-    @POST("/api/option/v5/amend_batch_orders/{underlying}")
+    @POST("/api/v5/option/amend_batch_orders/{underlying}")
     Call<JSONObject> amendBatchOrdersByOrderId(@Path("underlying") String underlying, @Body AmendDateParam amendDateParam);
 
     //批量修改订单(通过client_oid)
-    @POST("/api/option/v5/amend_batch_orders/{underlying}")
+    @POST("/api/v5/option/amend_batch_orders/{underlying}")
     Call<JSONObject> amendBatchOrdersByClientOid(@Path("underlying") String underlying, @Body AmendDateParam amendDateParam);
 
     //获取单个订单状态(通过order_id)
-    @GET("/api/option/v5/orders/{underlying}/{order_id}")
+    @GET("/api/v5/option/orders/{underlying}/{order_id}")
     Call<JSONObject> getOrderInfoByOrderId(@Path("underlying") String underlying,
                                   @Path("order_id") String order_id);
 
     //获取单个订单状态(通过client_oid)
-    @GET("/api/option/v5/orders/{underlying}/{client_oid}")
+    @GET("/api/v5/option/orders/{underlying}/{client_oid}")
     Call<JSONObject> getOrderInfoByClientOid(@Path("underlying") String underlying,
                                              @Path("client_oid") String client_oid);
 
     //获取订单列表
-    @GET("/api/option/v5/orders/{underlying}")
+    @GET("/api/v5/option/orders/{underlying}")
     Call<JSONObject> getOrderList(@Path("underlying") String underlying,
                                   @Query("instrument_id") String instrument_id,
                                   @Query("after") String after,
@@ -84,7 +84,7 @@ public interface OptionTradeAPI {
                                   @Query("state") String state);
 
     //获取成交明细
-    @GET("/api/option/v5/fills/{underlying}")
+    @GET("/api/v5/option/fills/{underlying}")
     Call<JSONArray> getFills(@Path("underlying") String underlying,
                              @Query("order_id") String order_id,
                              @Query("instrument_id") String instrument_id,
@@ -93,14 +93,14 @@ public interface OptionTradeAPI {
                              @Query("limit") String limit);
 
     //账单流水查询
-    @GET("/api/option/v5/accounts/{underlying}/ledger")
+    @GET("/api/v5/option/accounts/{underlying}/ledger")
     Call<JSONArray> getLedger(@Path("underlying") String underlying,
                               @Query("after") String after,
                               @Query("before") String before,
                               @Query("limit") String limit);
 
     //获取当前账户交易的手续费率
-    @GET("/api/option/v5/trade_fee")
+    @GET("/api/v5/option/trade_fee")
     Call<JSONObject> getTradeFee(@Query("category") String category,
                                  @Query("underlying") String underlying);
 

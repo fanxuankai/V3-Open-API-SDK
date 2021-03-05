@@ -11,55 +11,55 @@ import java.util.List;
 public interface SwapTradeAPI {
 
     //下单
-    @POST("/api/swap/v5/order")
+    @POST("/api/v5/swap/order")
     Call<Object> order(@Body PpOrder ppOrder);
 
     //批量下单
-    @POST("/api/swap/v5/orders")
+    @POST("/api/v5/swap/orders")
     Call<String> orders(@Body JSONObject ppOrders);
 
     //撤单(通过order_id)
-    @POST("/api/swap/v5/cancel_order/{instrument_id}/{order_id}")
+    @POST("/api/v5/swap/cancel_order/{instrument_id}/{order_id}")
     Call<String> cancelOrderByOrderId(@Path("instrument_id") String instrument_id, @Path("order_id") String order_id);
 
         //撤单(通过client_oid)
-    @POST("/api/swap/v5/cancel_order/{instrument_id}/{client_oid}")
+    @POST("/api/v5/swap/cancel_order/{instrument_id}/{client_oid}")
     Call<String> cancelOrderByClientOid(@Path("instrument_id") String instrument_id, @Path("client_oid") String client_oid);
 
     //批量撤单
-    @POST("/api/swap/v5/cancel_batch_orders/{instrument_id}")
+    @POST("/api/v5/swap/cancel_batch_orders/{instrument_id}")
     Call<String> cancelOrdersByOrderIds(@Path("instrument_id") String instrument_id, @Body JSONObject ppOrders);
 
     //批量撤单
-    @POST("/api/swap/v5/cancel_batch_orders/{instrument_id}")
+    @POST("/api/v5/swap/cancel_batch_orders/{instrument_id}")
     Call<String> cancelOrdersByClientOids(@Path("instrument_id") String instrument_id, @Body JSONObject ppOrders);
 
     //修改订单(通过order_id)
-    @POST("/api/swap/v5/amend_order/{instrument_id}")
+    @POST("/api/v5/swap/amend_order/{instrument_id}")
     Call<String> amendOrderByOrderId(@Path("instrument_id") String instrument_id, @Body AmendOrder amendOrder);
 
     //修改订单(通过client_oid)
-    @POST("/api/swap/v5/amend_order/{instrument_id}")
+    @POST("/api/v5/swap/amend_order/{instrument_id}")
     Call<String> amendOrderByClientOid(@Path("instrument_id") String instrument_id, @Body AmendOrder amendOrder);
 
     //批量修改订单(通过order_id)
-    @POST("/api/swap/v5/amend_batch_orders/{instrument_id}")
+    @POST("/api/v5/swap/amend_batch_orders/{instrument_id}")
     Call<String> amendBatchOrderByOrderId(@Path("instrument_id") String instrument_id, @Body AmendOrderParam amendOrder);
 
     //批量修改订单(通过client_oid)
-    @POST("/api/swap/v5/amend_batch_orders/{instrument_id}")
+    @POST("/api/v5/swap/amend_batch_orders/{instrument_id}")
     Call<String> amendBatchOrderByClientOid(@Path("instrument_id") String instrument_id, @Body AmendOrderParam amendOrder);
 
     //委托策略下单
-    @POST("/api/swap/v5/order_algo")
+    @POST("/api/v5/swap/order_algo")
     Call<String> swapOrderAlgo(@Body SwapOrderParam swapOrderParam);
 
     //委托策略撤单
-    @POST("/api/swap/v5/cancel_algos")
+    @POST("/api/v5/swap/cancel_algos")
     Call<String> cancelOrderAlgo(@Body CancelOrderAlgo cancelOrderAlgo);
 
     //获取委托单列表
-    @GET("/api/swap/v5/order_algo/{instrument_id}")
+    @GET("/api/v5/swap/order_algo/{instrument_id}")
     Call<String> getSwapOrders(@Path("instrument_id") String instrument_id,
                                @Query("order_type") String order_type,
                                @Query("status") String status,
@@ -69,11 +69,11 @@ public interface SwapTradeAPI {
                                @Query("limit") String limit);
 
     //市价全平
-    @POST("/api/swap/v5/close_position")
+    @POST("/api/v5/swap/close_position")
     Call<String> closePosition(@Body ClosePosition closePosition);
 
     //撤销所有平仓挂单
-    @POST("/api/swap/v5/cancel_all")
+    @POST("/api/v5/swap/cancel_all")
     Call<String> CancelAll(@Body CancelAllParam cancelAllParam);
 
 }

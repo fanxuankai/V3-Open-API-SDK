@@ -1,15 +1,16 @@
 package com.okcoin.commons.okex.open.api.service.account.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.okcoin.commons.okex.open.api.bean.account.result.Currency;
-import com.okcoin.commons.okex.open.api.bean.account.result.Ledger;
-import com.okcoin.commons.okex.open.api.bean.account.result.Wallet;
-import com.okcoin.commons.okex.open.api.bean.account.result.WithdrawFee;
+import com.okcoin.commons.okex.open.api.bean.Result;
+import com.okcoin.commons.okex.open.api.bean.account.param.GreeksTypeDto;
+import com.okcoin.commons.okex.open.api.bean.account.param.LeverageDto;
+import com.okcoin.commons.okex.open.api.bean.account.param.PositionMarginBalanceDto;
+import com.okcoin.commons.okex.open.api.bean.account.param.PositionModeDto;
+import com.okcoin.commons.okex.open.api.bean.account.result.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Account api
@@ -19,66 +20,77 @@ import java.util.List;
  * @date 2018/07/04 20:51
  */
 public interface AccountAPI {
-    //资金账户信息
-    @GET("/api/account/v5/wallet")
-    Call<List<Wallet>> getWallet();
 
-    //单个币种账户信息
-    @GET("/api/account/v5/wallet/{currency}")
-    Call<List<Wallet>> getWallet(@Path("currency") String currency);
+    //查看账户余额
+    @GET("/api/v5/account/balance")
+    Call<Result<List<Balance>>> getBalance(@Query("ccy") String ccy);
 
-    //资金划转
-    @POST("/api/account/v5/transfer")
-    Call<JSONObject> transfer(@Body JSONObject jsonObject);
+    //查看持仓信息
+    @GET("/api/v5/account/positions")
+    Call<Result<List<Position>>> getPositions(@Query("instType") String instType,
+                                              @Query("instId") String instId,
+                                              @Query("posId") String posId);
 
-    //提币
-    @POST("/api/account/v5/withdrawal")
-    Call<JSONObject> withdraw(@Body JSONObject jsonObject);
+    //账单流水查询（近七天）
+    @GET("/api/v5/account/bills")
+    Call<Result<List<BillVo>>> getBills(@QueryMap Map<String, String> params);
 
-    //账单流水查询
-    @GET("/api/account/v5/ledger")
-    Call<JSONArray> getLedger(@Query("currency") String currency,@Query("after") String after,
-                              @Query("before") String before,  @Query("limit") String limit,@Query("type") String type);
+    //账单流水查询（近三个月）
+    @GET("/api/v5/account/bills-archive")
+    Call<Result<List<BillVo>>> getBillsArchive(@QueryMap Map<String, String> params);
 
-    //获取充值地址
-    @GET("/api/account/v5/deposit/address")
-    Call<JSONArray> getDepositAddress(@Query("currency") String currency);
+    //查看账户配置
+    @GET("/api/v5/account/config")
+    Call<Result<List<ConfigVo>>> getConfig(@QueryMap Map<String, String> params);
 
-    //获取账户资产估值
-    @GET("/api/account/v5/asset-valuation")
-    Call<JSONObject> getAllAccount(@Query("account_type") String account_type,
-                                   @Query("valuation_currency") String valuation_currency);
+    //设置持仓模式
+    @POST("/api/v5/account/set-position-mode")
+    Call<Result<List<PositionModeVo>>> setPositionMode(@Body PositionModeDto dto);
 
-    //获取子账户余额信息
-    @GET("/api/account/v5/sub-account")
-    Call<String> getSubAccount(@Query("sub-account") String sub_account);
+    //设置杠杆倍数
+    @POST("/api/v5/account/set-leverage")
+    Call<Result<List<LeverageVo>>> setLeverage(@Body LeverageDto dto);
 
-    //查询所有币种提币记录
-    @GET("/api/account/v5/withdrawal/history")
-    Call<JSONArray> getWithdrawalHistory();
+    //获取最大可买卖/开仓数量
+    @GET("/api/v5/account/max-size")
+    Call<Result<List<MaxSizeVo>>> getMaxSize(@QueryMap Map<String, String> params);
 
-    //查看单个币种提币记录
-    @GET("/api/account/v5/withdrawal/history/{currency}")
-    Call<JSONArray> getWithdrawalHistory(@Path("currency") String currency);
+    //获取最大可用数量
+    @GET("/api/v5/account/max-avail-size")
+    Call<Result<List<MaxAvailSizeVo>>> getMaxAvailSize(@QueryMap Map<String, String> params);
 
-    //获取所有币种充值记录
-    @GET("/api/account/v5/deposit/history")
-    Call<String> getDepositHistory();
+    //调整保证金
+    @POST("/api/v5/account/position/margin-balance")
+    Call<Result<List<PositionMarginBalanceVo>>> setPositionMarginBalance(@Body PositionMarginBalanceDto dto);
 
-    //获取单个币种充值记录
-    @GET("/api/account/v5/deposit/history/{currency}")
-    Call<String> getDepositHistory(@Path("currency") String currency);
+    //获取杠杆倍数
+    @GET("/api/v5/account/leverage-info")
+    Call<Result<List<LeverageVo>>> getLeverageInfo(@Query("instId") String instId,
+                                                   @Query("mgnMode") String mgnMode);
 
-    //获取币种列表
-    @GET("/api/account/v5/currencies")
-    Call<List<Currency>> getCurrencies();
+    //获取交易产品最大可借
+    @GET("/api/v5/account/max-loan")
+    Call<Result<List<MaxLoanVo>>> getMaxLoan(@Query("instId") String instId,
+                                             @Query("mgnMode") String mgnMode,
+                                             @Query("mgnCcy") String mgnCcy);
 
-    //提币手续费
-    @GET("/api/account/v5/withdrawal/fee")
-    Call<List<WithdrawFee>> getWithdrawFee(@Query("currency") String currency);
+    //获取当前账户交易手续费费率
+    @GET("/api/v5/account/trade-fee")
+    Call<Result<List<TradeFeeVo>>> getTradeFee(@Query("instType") String instType,
+                                               @Query("instId") String instId,
+                                               @Query("uly") String uly,
+                                               @Query("category") String category);
 
-    //余币宝申购赎回
-    @POST("/api/account/v5/purchase_redempt")
-    Call<JSONObject> purchaseRedempt(@Body JSONObject jsonObject);
+    //获取计息记录
+    @GET("/api/v5/account/interest-accrued")
+    Call<Result<List<InterestAccruedVo>>> getInterestAccrued(@QueryMap Map<String, String> params);
+
+    //期权希腊字母PA/BS切换
+    @POST("/api/v5/account/set-greeks")
+    Call<Result<List<GreeksTypeVo>>> setGreeks(@Body GreeksTypeDto dto);
+
+    //查看账户最大可转余额
+    @GET("/api/v5/account/max-withdrawal")
+    Call<Result<List<MaxWithDrawalVo>>> getMaxWithdrawal(@Query("ccy") String ccy);
 
 }

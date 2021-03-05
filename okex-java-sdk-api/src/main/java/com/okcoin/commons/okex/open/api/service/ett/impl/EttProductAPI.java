@@ -14,10 +14,10 @@ import java.util.List;
  */
 interface EttProductAPI {
 
-    @GET("/api/ett/v5/constituents/{ett}")
+    @GET("/api/v5/ett/constituents/{ett}")
     Call<EttConstituentsResult> getConstituents(@Path("ett") String ett);
 
-    @GET("/api/ett/v5/define-price/{ett}")
+    @GET("/api/v5/ett/define-price/{ett}")
     Call<List<EttSettlementDefinePrice>> getDefinePrice(@Path("ett") String ett);
 
 }

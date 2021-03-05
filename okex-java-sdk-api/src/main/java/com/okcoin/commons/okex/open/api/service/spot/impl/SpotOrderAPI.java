@@ -12,47 +12,47 @@ import java.util.Map;
 public interface SpotOrderAPI {
 
     //下单
-    @POST("api/spot/v5/orders")
+    @POST("api/spot/orders")
     Call<OrderResult> addOrder(@Body PlaceOrderParam order);
 
     //批量下单
-    @POST("api/spot/v5/batch_orders")
+    @POST("api/spot/batch_orders")
     Call<Map<String, List<OrderResult>>> addOrders(@Body List<PlaceOrderParam> param);
 
     //撤销指定订单(通过order_id进行撤单)
-    @HTTP(method = "POST", path = "api/spot/v5/cancel_orders/{order_id}", hasBody = true)
+    @HTTP(method = "POST", path = "api/spot/cancel_orders/{order_id}", hasBody = true)
     Call<OrderResult> cancleOrderByOrderId(@Path("order_id") String order_id, @Body PlaceOrderParam order);
 
     //撤销指定订单(通过client_oid进行撤单)
-    @HTTP(method = "POST", path = "api/spot/v5/cancel_orders/{client_oid}", hasBody = true)
+    @HTTP(method = "POST", path = "api/spot/cancel_orders/{client_oid}", hasBody = true)
     Call<OrderResult> cancleOrderByClientOid(@Path("client_oid") String client_oid, @Body PlaceOrderParam order);
 
     //批量撤销订单（通过order_id）
-    @HTTP(method = "POST", path = "api/spot/v5/cancel_batch_orders", hasBody = true)
+    @HTTP(method = "POST", path = "api/spot/cancel_batch_orders", hasBody = true)
     Call<Map<String, Object>> batchCancleOrdersByOrderId(@Body List<OrderParamDto> cancleOrders);
 
     //批量撤销订单(通过client_oid)
-    @HTTP(method = "POST", path = "api/spot/v5/cancel_batch_orders", hasBody = true)
+    @HTTP(method = "POST", path = "api/spot/cancel_batch_orders", hasBody = true)
     Call<Map<String, Object>> batchCancleOrdersByClientOid(@Body List<OrderParamDto> orderParamDto);
 
     //修改订单(通过order_id)
-    @HTTP(method = "POST", path = "/api/spot/v5/amend_order/{instrument_id}", hasBody = true)
+    @HTTP(method = "POST", path = "/api/v5/spot/amend_order/{instrument_id}", hasBody = true)
     Call<JSONObject> amendOrderByOrderId(@Path("instrument_id") String instrument_id, @Body AmendParam amendParam);
 
     //修改订单(通过client_oid )
-    @HTTP(method = "POST", path = "/api/spot/v5/amend_order/{instrument_id}", hasBody = true)
+    @HTTP(method = "POST", path = "/api/v5/spot/amend_order/{instrument_id}", hasBody = true)
     Call<JSONObject> amendOrderByClientOid(@Path("instrument_id") String instrument_id, @Body AmendParam amendParam);
 
     //批量修改订单(通过order_id )
-    @HTTP(method = "POST", path = "/api/spot/v5/amend_batch_orders", hasBody = true)
+    @HTTP(method = "POST", path = "/api/v5/spot/amend_batch_orders", hasBody = true)
     Call<JSONObject> batchAmendOrderByOrderId(@Body List<AmendParam> amendParam);
 
     //批量修改订单(通过client_oid )
-    @HTTP(method = "POST", path = "/api/spot/v5/amend_batch_orders", hasBody = true)
+    @HTTP(method = "POST", path = "/api/v5/spot/amend_batch_orders", hasBody = true)
     Call<JSONObject> batchAmendOrdersByClientOid(@Body List<AmendParam> AmendParam);
 
     //获取订单列表
-    @GET("api/spot/v5/orders")
+    @GET("api/spot/orders")
     Call<List<OrderInfo>> getOrders(@Query("instrument_id") String instrument_id,
                                     @Query("state") String state,
                                     @Query("after") String after,
@@ -61,24 +61,24 @@ public interface SpotOrderAPI {
                                    );
 
     //获取所有未成交订单
-    @GET("api/spot/v5/orders_pending")
+    @GET("api/spot/orders_pending")
     Call<List<PendingOrdersInfo>> getPendingOrders(@Query("instrument_id") String instrument_id,
                                                    @Query("after") String after,
                                                    @Query("before") String before,
                                                    @Query("limit") String limit);
 
     //获取订单信息(通过order_id)
-    @GET("api/spot/v5/orders/{order_id}")
+    @GET("api/spot/orders/{order_id}")
     Call<JSONObject> getOrderByOrderId(@Path("order_id") String order_id,
                                        @Query("instrument_id") String instrument_id);
 
     //获取订单信息(通过client_oid)
-    @GET("api/spot/v5/orders/{client_oid}")
+    @GET("api/spot/orders/{client_oid}")
     Call<JSONObject> getOrderByClientOid(@Path("client_oid") String client_oid,
                                          @Query("instrument_id") String instrument_id);
 
     //获取成交明细
-    @GET("api/spot/v5/fills")
+    @GET("api/spot/fills")
     Call<List<Fills>> getFills(@Query("order_id") String order_id,
                                @Query("instrument_id") String instrument_id,
                                @Query("after") String after,
@@ -86,15 +86,15 @@ public interface SpotOrderAPI {
                                @Query("limit") String limit);
 
     //委托策略下单
-    @POST("api/spot/v5/order_algo")
+    @POST("api/spot/order_algo")
     Call<OrderAlgoResult> addorder_algo(@Body OrderAlgoParam order);
 
     //委托策略撤单
-    @POST("api/spot/v5/cancel_batch_algos")
+    @POST("api/spot/cancel_batch_algos")
     Call<CancelAlgoResult> cancelOrder_algo(@Body CancelAlgoParam cancelAlgoParam);
 
     //获取委托单列表
-    @GET("/api/spot/v5/algo")
+    @GET("/api/v5/spot/algo")
     Call <String> getAlgoOrder(@Query("instrument_id") String instrument_id,
                                @Query("order_type") String order_type,
                                @Query("status") String status,

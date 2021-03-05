@@ -1,64 +1,58 @@
 package com.okcoin.commons.okex.open.api.service.account;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.okcoin.commons.okex.open.api.bean.account.param.PurchaseRedempt;
-import com.okcoin.commons.okex.open.api.bean.account.param.Transfer;
-import com.okcoin.commons.okex.open.api.bean.account.param.Withdraw;
-import com.okcoin.commons.okex.open.api.bean.account.result.Currency;
-import com.okcoin.commons.okex.open.api.bean.account.result.Ledger;
-import com.okcoin.commons.okex.open.api.bean.account.result.Wallet;
-import com.okcoin.commons.okex.open.api.bean.account.result.WithdrawFee;
-import retrofit2.http.Query;
+import com.okcoin.commons.okex.open.api.bean.account.param.*;
+import com.okcoin.commons.okex.open.api.bean.account.result.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 
 public interface AccountAPIService {
-    //资金账户信息
-    List<Wallet> getWallet();
+    //查看账户余额
+    List<Balance> getBalance(String ccy);
 
-    //单一币种账户信息
-    List<Wallet> getWallet(String currency);
+    //查看持仓信息
+    List<Position> getPositions(String instType, String instId, String posId);
 
-    //资金划转
-    JSONObject transfer(Transfer transfer);
+    //账单流水查询（近七天）
+    List<BillVo> getBills(BillDto dto);
 
-    //提币
-    JSONObject withdraw(Withdraw withdraw);
+    //账单流水查询（近三个月）
+    List<BillVo> getBillsArchive(BillDto dto);
 
-    //账单流水查询
-    JSONArray getLedger(String currency, String after, String before, String limit, String type);
+    //查看账户配置
+    List<ConfigVo> getConfig(ConfigDto dto);
 
-    //获取充值地址
-    JSONArray getDepositAddress(String currency);
+    //设置持仓模式
+    List<PositionModeVo> setPositionMode(PositionModeDto dto);
 
-    //获取账户资产估值
-    JSONObject getAllAccount(String account_type,String valuation_currency);
+    //设置杠杆倍数
+    List<LeverageVo> setLeverage(LeverageDto dto);
 
-    //获取子账户余额信息
-    String getSubAccount(String sub_account);
+    //获取最大可买卖/开仓数量
+    List<MaxSizeVo> getMaxSize(MaxSizeDto dto);
 
-    //查看所有币种提币记录
-    JSONArray getWithdrawalHistory();
+    //获取最大可用数量
+    List<MaxAvailSizeVo> getMaxAvailSize(MaxAvailSizeDto dto);
 
-    //查看单个币种提币记录
-    JSONArray getWithdrawalHistory(String currency);
+    //调整保证金
+    List<PositionMarginBalanceVo> setPositionMarginBalance(PositionMarginBalanceDto dto);
 
-    //获取所有币种充值记录
-    String getDepositHistory();
+    //获取杠杆倍数
+    List<LeverageVo> getLeverageInfo(String instId, String mgnMode);
 
-    //获取单个币种充值记录
-    String getDepositHistory(String currency);
+    //获取交易产品最大可借
+    List<MaxLoanVo> getMaxLoan(String instId, String mgnMode, String mgnCcy);
 
-    //获取币种列表
-    List<Currency> getCurrencies();
+    //获取当前账户交易手续费费率
+    List<TradeFeeVo> getTradeFee(String instType, String instId, String uly, String category);
 
-    //提币手续费
-    List<WithdrawFee> getWithdrawFee(String currency);
+    //获取计息记录
+    List<InterestAccruedVo> getInterestAccrued(InterestAccruedDto dto);
 
-    //余币宝申购赎回
-    JSONObject purchaseRedempt(PurchaseRedempt purchaseRedempt);
+    //期权希腊字母PA/BS切换
+    List<GreeksTypeVo> setGreeks(GreeksTypeDto dto);
+
+    //查看账户最大可转余额
+    List<MaxWithDrawalVo> getMaxWithdrawal(String ccy);
 
 }

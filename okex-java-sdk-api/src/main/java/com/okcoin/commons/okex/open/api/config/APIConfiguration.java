@@ -30,9 +30,6 @@ public class APIConfiguration {
     private String endpoint;
 
 
-
-
-
     /**
      * Host connection timeout.
      */
@@ -59,6 +56,11 @@ public class APIConfiguration {
      * internationalization  {@link com.okcoin.commons.okex.open.api.enums.I18nEnum}
      */
     private I18nEnum i18n;
+
+    /**
+     * 模拟盘
+     */
+    private boolean simulated;
 
     public APIConfiguration() {
         this(null);
@@ -156,5 +158,13 @@ public class APIConfiguration {
 
     public void setI18n(I18nEnum i18n) {
         this.i18n = i18n;
+    }
+
+    public boolean isSimulated() {
+        return simulated;
+    }
+
+    public void setSimulated(boolean simulated) {
+        this.simulated = simulated;
     }
 }

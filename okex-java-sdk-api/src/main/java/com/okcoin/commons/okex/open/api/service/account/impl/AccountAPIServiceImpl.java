@@ -1,120 +1,102 @@
 package com.okcoin.commons.okex.open.api.service.account.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.okcoin.commons.okex.open.api.bean.account.param.PurchaseRedempt;
-import com.okcoin.commons.okex.open.api.bean.account.param.Transfer;
-import com.okcoin.commons.okex.open.api.bean.account.param.Withdraw;
-import com.okcoin.commons.okex.open.api.bean.account.result.Currency;
-import com.okcoin.commons.okex.open.api.bean.account.result.Ledger;
-import com.okcoin.commons.okex.open.api.bean.account.result.Wallet;
-import com.okcoin.commons.okex.open.api.bean.account.result.WithdrawFee;
+import com.okcoin.commons.okex.open.api.bean.account.param.*;
+import com.okcoin.commons.okex.open.api.bean.account.result.*;
 import com.okcoin.commons.okex.open.api.client.APIClient;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
 import com.okcoin.commons.okex.open.api.service.account.AccountAPIService;
+import com.okcoin.commons.okex.open.api.utils.BeanUtil;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class AccountAPIServiceImpl implements AccountAPIService {
 
-    private APIClient client;
-    private AccountAPI api;
+    private final APIClient client;
+    private final AccountAPI api;
 
     public AccountAPIServiceImpl(APIConfiguration config) {
         this.client = new APIClient(config);
         this.api = client.createService(AccountAPI.class);
     }
 
-    //资金账户信息
     @Override
-    public List<Wallet> getWallet() {
-        return this.client.executeSync(this.api.getWallet());
+    public List<Balance> getBalance(String ccy) {
+        return client.executeSyncWithResult(api.getBalance(ccy));
     }
 
-    //单一币种账户信息
     @Override
-    public List<Wallet> getWallet(String currency) {
-        return this.client.executeSync(this.api.getWallet(currency));
+    public List<Position> getPositions(String instType, String instId, String posId) {
+        return client.executeSyncWithResult(api.getPositions(instType, instId, posId));
     }
 
-    //资金划转
     @Override
-    public JSONObject transfer(Transfer transfer) {
-        return this.client.executeSync(this.api.transfer(JSONObject.parseObject(JSON.toJSONString(transfer))));
+    public List<BillVo> getBills(BillDto dto) {
+        return client.executeSyncWithResult(api.getBills(BeanUtil.toMap(dto)));
     }
 
-    //提币
     @Override
-    public JSONObject withdraw(Withdraw withdraw) {
-        return this.client.executeSync(this.api.withdraw(JSONObject.parseObject(JSON.toJSONString(withdraw))));
+    public List<BillVo> getBillsArchive(BillDto dto) {
+        return client.executeSyncWithResult(api.getBillsArchive(BeanUtil.toMap(dto)));
     }
 
-    //账单流水查询
     @Override
-    public JSONArray getLedger(String currency, String after, String before, String limit, String type) {
-        return this.client.executeSync(this.api.getLedger(currency, after, before, limit, type));
+    public List<ConfigVo> getConfig(ConfigDto dto) {
+        return client.executeSyncWithResult(api.getConfig(BeanUtil.toMap(dto)));
     }
 
-    //获取充值地址
     @Override
-    public JSONArray getDepositAddress(String currency) {
-        return this.client.executeSync(this.api.getDepositAddress(currency));
+    public List<PositionModeVo> setPositionMode(PositionModeDto dto) {
+        return client.executeSyncWithResult(api.setPositionMode(dto));
     }
 
-    //获取账户资产估值
     @Override
-    public JSONObject getAllAccount(String account_type, String valuation_currency) {
-        return this.client.executeSync(this.api.getAllAccount(account_type,valuation_currency));
+    public List<LeverageVo> setLeverage(LeverageDto dto) {
+        return client.executeSyncWithResult(api.setLeverage(dto));
     }
 
-    //获取子账户余额
     @Override
-    public String getSubAccount(String sub_account) {
-        return this.client.executeSync(this.api.getSubAccount(sub_account));
+    public List<MaxSizeVo> getMaxSize(MaxSizeDto dto) {
+        return client.executeSyncWithResult(api.getMaxSize(BeanUtil.toMap(dto)));
     }
 
-    //查询所有币种提币记录
     @Override
-    public JSONArray getWithdrawalHistory() {
-        return this.client.executeSync(this.api.getWithdrawalHistory());
+    public List<MaxAvailSizeVo> getMaxAvailSize(MaxAvailSizeDto dto) {
+        return client.executeSyncWithResult(api.getMaxAvailSize(BeanUtil.toMap(dto)));
     }
 
-    //查询单个币种提币记录
     @Override
-    public JSONArray getWithdrawalHistory(String currency) {
-        return this.client.executeSync(this.api.getWithdrawalHistory(currency));
+    public List<PositionMarginBalanceVo> setPositionMarginBalance(PositionMarginBalanceDto dto) {
+        return client.executeSyncWithResult(api.setPositionMarginBalance(dto));
     }
 
-    //获取所有币种充值记录
     @Override
-    public String getDepositHistory() {
-        return this.client.executeSync(this.api.getDepositHistory());
+    public List<LeverageVo> getLeverageInfo(String instId, String mgnMode) {
+        return client.executeSyncWithResult(api.getLeverageInfo(instId, mgnMode));
     }
 
-    //获取单个币种充值记录
     @Override
-    public String getDepositHistory(String currency) {
-        return this.client.executeSync(this.api.getDepositHistory(currency));
+    public List<MaxLoanVo> getMaxLoan(String instId, String mgnMode, String mgnCcy) {
+        return client.executeSyncWithResult(api.getMaxLoan(instId, mgnMode, mgnCcy));
     }
 
-    //获取币种列表
     @Override
-    public List<Currency> getCurrencies() {
-        return this.client.executeSync(this.api.getCurrencies());
+    public List<TradeFeeVo> getTradeFee(String instType, String instId, String uly, String category) {
+        return client.executeSyncWithResult(api.getTradeFee(instType, instId, uly, category));
     }
 
-    //提币手续费
     @Override
-    public List<WithdrawFee> getWithdrawFee(String currency) {
-        return this.client.executeSync(this.api.getWithdrawFee(currency));
+    public List<InterestAccruedVo> getInterestAccrued(InterestAccruedDto dto) {
+        return client.executeSyncWithResult(api.getInterestAccrued(BeanUtil.toMap(dto)));
     }
 
-    //余币宝申购赎回
     @Override
-    public JSONObject purchaseRedempt(PurchaseRedempt purchaseRedempt) {
-        return this.client.executeSync(this.api.purchaseRedempt(JSONObject.parseObject(JSON.toJSONString(purchaseRedempt))));
+    public List<GreeksTypeVo> setGreeks(GreeksTypeDto dto) {
+        return client.executeSyncWithResult(api.setGreeks(dto));
+    }
+
+    @Override
+    public List<MaxWithDrawalVo> getMaxWithdrawal(String ccy) {
+        return client.executeSyncWithResult(api.getMaxWithdrawal(ccy));
     }
 
 }

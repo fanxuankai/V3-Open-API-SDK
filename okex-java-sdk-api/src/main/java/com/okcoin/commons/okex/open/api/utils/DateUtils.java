@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -114,18 +116,21 @@ public class DateUtils {
      * UNIX timestamp ISO 8601 rule eg: 2018-02-03T05:34:14.110Z
      */
     public static String getUnixTime() {
-        StringBuilder nowStr = new StringBuilder(Instant.now().toString());
+//        StringBuilder nowStr = new StringBuilder(Instant.now().toString());
 
-      return new Date(System.currentTimeMillis()).toInstant().toString();
+//        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+        return new Date(System.currentTimeMillis()).toInstant().toString();
 
 //        System.out.println("————————时间戳："+nowStr);
 
         //可以有效解决字符串下标越界的问题
         //return new StringBuilder().append(nowStr.toString()).toString();
-        // return new StringBuilder().append(nowStr.substring(0,nowStr.lastIndexOf("."))).append(nowStr.substring(nowStr.lastIndexOf(".")).substring(0,4)).append(nowStr.substring(nowStr.length()-1)).toString();
+        // return new StringBuilder().append(nowStr.substring(0,nowStr.lastIndexOf("."))).append(nowStr.substring
+        // (nowStr.lastIndexOf(".")).substring(0,4)).append(nowStr.substring(nowStr.length()-1)).toString();
     }
 
-    /**Date
+    /**
+     * Date
      * epoch time   eg: 1517662142.557
      */
     public static String getEpochTime(final Date... time) {

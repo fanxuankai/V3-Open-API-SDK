@@ -1,6 +1,8 @@
 package com.okcoin.commons.okex.open.api.client;
 
 
+import com.alibaba.fastjson.JSON;
+import com.okcoin.commons.okex.open.api.bean.Result;
 import com.okcoin.commons.okex.open.api.bean.ett.result.CursorPager;
 import com.okcoin.commons.okex.open.api.bean.futures.HttpResult;
 import com.okcoin.commons.okex.open.api.config.APIConfiguration;
@@ -8,7 +10,6 @@ import com.okcoin.commons.okex.open.api.constant.APIConstants;
 import com.okcoin.commons.okex.open.api.enums.HttpHeadersEnum;
 import com.okcoin.commons.okex.open.api.exception.APIException;
 import com.okcoin.commons.okex.open.api.utils.DateUtils;
-import com.alibaba.fastjson.JSON;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
@@ -68,6 +69,48 @@ public class APIClient {
      * Synchronous send request
      */
     //解析
+    public <T> T executeSyncWithResult(final Call<Result<T>> call){
+        try {
+
+            final Response<Result<T>> response = call.execute();
+//            System.out.println("response-------------------------"+call.toString());
+            //是否打印config配置信息
+            if (this.config.isPrint()) {
+                //打印响应信息
+                this.printResponse(response);
+            }
+            //获取状态码
+            final int status = response.code();
+            //获取错误信息
+            final String message = new StringBuilder().append(response.code()).append(" / ").append(response.message()).toString();
+            //响应成功
+            if (response.isSuccessful()) {
+                return response.body().getData();
+                ////如果状态码是400,401,429,500中的任意一个，抛出异常
+            } else if (APIConstants.resultStatusArray.contains(status)) {
+                final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
+                if(result.getCode() == 0 && result.getMessage() == null){
+                   // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
+                   // System.out.println(result);
+                    throw new APIException(result.getErrorCode(),result.getErrorMessage());
+                }else{
+                    //System.out.println("错误码："+result.getCode()+"\t错误信息"+result.getMessage());
+                    //抛出异常
+                  //  System.out.println(result);
+                    throw new APIException(result.getCode(), result.getMessage());
+                }
+            } else {
+                throw new APIException(message);
+            }
+        } catch (final IOException e) {
+            throw new APIException("APIClient executeSync exception.", e);
+        }
+    }
+
+    /**
+     * Synchronous send request
+     */
+    //解析
     public <T> T executeSync(final Call<T> call){
         try {
 
@@ -89,13 +132,13 @@ public class APIClient {
             } else if (APIConstants.resultStatusArray.contains(status)) {
                 final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
                 if(result.getCode() == 0 && result.getMessage() == null){
-                   // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
-                   // System.out.println(result);
+                    // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
+                    // System.out.println(result);
                     throw new APIException(result.getErrorCode(),result.getErrorMessage());
                 }else{
                     //System.out.println("错误码："+result.getCode()+"\t错误信息"+result.getMessage());
                     //抛出异常
-                  //  System.out.println(result);
+                    //  System.out.println(result);
                     throw new APIException(result.getCode(), result.getMessage());
                 }
             } else {

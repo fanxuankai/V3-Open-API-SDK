@@ -116,7 +116,7 @@ public class WebSocketClient {
                     if (s.contains("partial")) {//是第一次的200档，记录下第一次的200档
                         String[] strs=s.split("],");
                         //System.out.println(strs.length);
-                        //System.out.println(DateFormatUtils.format(new Date(), DateUtils.TIME_STYLE_S4) + " Receive: " + s);
+                        System.out.println(DateFormatUtils.format(new Date(), DateUtils.TIME_STYLE_S4) + " Receive: " + s);
                         JSONObject rst = JSONObject.fromObject(s);
                         net.sf.json.JSONArray dataArr = net.sf.json.JSONArray.fromObject(rst.get("data"));
                         JSONObject data = JSONObject.fromObject(dataArr.get(0));

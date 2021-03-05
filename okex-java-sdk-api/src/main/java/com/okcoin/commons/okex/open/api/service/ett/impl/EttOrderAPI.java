@@ -15,17 +15,17 @@ import java.util.List;
  */
 interface EttOrderAPI {
 
-    @POST("/api/ett/v5/orders")
+    @POST("/api/v5/ett/orders")
     Call<EttCreateOrderResult> createOrder(@Body EttCreateOrderParam param);
 
-    @DELETE("/api/ett/v5/orders/{order_id}")
+    @DELETE("/api/v5/ett/orders/{order_id}")
     Call<EttCancelOrderResult> cancelOrder(@Path("order_id") String order_id);
 
-    @GET("/api/ett/v5/orders")
+    @GET("/api/v5/ett/orders")
     Call<List<EttOrder>> getOrder(@Query("ett") String ett, @Query("type") Integer type, @Query("status") Integer status, @Query("before") String before, @Query("after") String after,
                                   @Query("limit") int limit);
 
-    @GET("/api/ett/v5/orders/{order_id}")
+    @GET("/api/v5/ett/orders/{order_id}")
     Call<EttOrder> getOrder(@Path("order_id") String order_id);
 
 }
