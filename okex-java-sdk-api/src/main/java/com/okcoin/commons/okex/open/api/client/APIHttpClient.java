@@ -65,9 +65,7 @@ public class APIHttpClient {
         clientBuilder.addInterceptor((Interceptor.Chain chain) -> {
             final Request.Builder requestBuilder = chain.request().newBuilder();
             final String timestamp = DateUtils.getUnixTime();
-            // 设置模拟盘请求头
-            String simulated = config.isSimulated() ? "1" : null;
-            requestBuilder.headers(this.headers(chain.request(), timestamp, simulated));
+            requestBuilder.headers(this.headers(chain.request(), timestamp));
             final Request request = requestBuilder.build();
             if (this.config.isPrint()) {
                 this.printRequest(request, timestamp);
@@ -78,7 +76,7 @@ public class APIHttpClient {
     }
 
     //    ,String simulated
-    private Headers headers(final Request request, final String timestamp, String simulated) {
+    private Headers headers(final Request request, final String timestamp) {
         final Headers.Builder builder = new Headers.Builder();
         builder.add(APIConstants.ACCEPT, ContentTypeEnum.APPLICATION_JSON.contentType());
         builder.add(APIConstants.CONTENT_TYPE, ContentTypeEnum.APPLICATION_JSON_UTF8.contentType());
@@ -90,9 +88,9 @@ public class APIHttpClient {
             builder.add(HttpHeadersEnum.OK_ACCESS_SIGN.header(), this.sign(request, timestamp));
             builder.add(HttpHeadersEnum.OK_ACCESS_TIMESTAMP.header(), timestamp);
             builder.add(HttpHeadersEnum.OK_ACCESS_PASSPHRASE.header(), this.credentials.getPassphrase());
-//            builder.add("x-simulated-trading","1");
-//            System.out.println("__________simulated:"+simulated);
-            builder.add(HttpHeadersEnum.x_simulated_trading.header(), simulated);
+            if (config.isSimulated()) {
+                builder.add(HttpHeadersEnum.x_simulated_trading.header(), "1");
+            }
         }
 
         return builder.build();
