@@ -13,5 +13,4 @@ public class AmendDateParam {
 
     private List<AmendOrder> amend_data;
 
-
 }

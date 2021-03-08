@@ -1,4 +1,4 @@
-package com.okcoin.commons.okex.open.api.bean.account.result;
+package com.okcoin.commons.okex.open.api.bean.asset.result;
 
 import lombok.Data;
 
@@ -17,4 +17,6 @@ public class DepositAddressVo {
     private String memo;
     private String ccy;
     private String to;
+    private String tag;
+    private String pmtId;
 }

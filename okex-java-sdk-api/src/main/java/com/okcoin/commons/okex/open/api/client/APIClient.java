@@ -21,6 +21,7 @@ import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -55,6 +56,20 @@ public class APIClient {
     }
 
     /**
+     * Initialize the apis client
+     */
+    public APIClient(final APIConfiguration config, boolean noSign) {
+        if (config == null || StringUtils.isEmpty(config.getEndpoint())) {
+            throw new RuntimeException("The APIClient params can't be empty.");
+        }
+        this.config = config;
+        this.credentials = noSign ? null : new APICredentials(config);
+        this.client = new APIHttpClient(config, this.credentials).client();
+        this.retrofit = new APIRetrofit(config, this.client).retrofit();
+        this.apiHttp = new ApiHttp(config, this.client);
+    }
+
+    /**
      * Initialize the retrofit operation service
      */
     public <T> T createService(final Class<T> service) {
@@ -69,7 +84,7 @@ public class APIClient {
      * Synchronous send request
      */
     //解析
-    public <T> T executeSyncWithResult(final Call<Result<T>> call){
+    public <T> T executeSyncWithResult(final Call<Result<T>> call) {
         try {
 
             final Response<Result<T>> response = call.execute();
@@ -82,21 +97,21 @@ public class APIClient {
             //获取状态码
             final int status = response.code();
             //获取错误信息
-            final String message = new StringBuilder().append(response.code()).append(" / ").append(response.message()).toString();
+            final String message = response.code() + " / " + response.message();
             //响应成功
-            if (response.isSuccessful()) {
+            if (response.isSuccessful() && response.body() != null && Objects.equals(response.body().getCode(), 0)) {
                 return response.body().getData();
                 ////如果状态码是400,401,429,500中的任意一个，抛出异常
             } else if (APIConstants.resultStatusArray.contains(status)) {
                 final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
-                if(result.getCode() == 0 && result.getMessage() == null){
-                   // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
-                   // System.out.println(result);
-                    throw new APIException(result.getErrorCode(),result.getErrorMessage());
-                }else{
+                if (result.getCode() == 0 && result.getMessage() == null) {
+                    // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
+                    // System.out.println(result);
+                    throw new APIException(result.getErrorCode(), result.getErrorMessage());
+                } else {
                     //System.out.println("错误码："+result.getCode()+"\t错误信息"+result.getMessage());
                     //抛出异常
-                  //  System.out.println(result);
+                    //  System.out.println(result);
                     throw new APIException(result.getCode(), result.getMessage());
                 }
             } else {
@@ -111,7 +126,7 @@ public class APIClient {
      * Synchronous send request
      */
     //解析
-    public <T> T executeSync(final Call<T> call){
+    public <T> T executeSync(final Call<T> call) {
         try {
 
             final Response<T> response = call.execute();
@@ -124,18 +139,19 @@ public class APIClient {
             //获取状态码
             final int status = response.code();
             //获取错误信息
-            final String message = new StringBuilder().append(response.code()).append(" / ").append(response.message()).toString();
+            final String message =
+                    new StringBuilder().append(response.code()).append(" / ").append(response.message()).toString();
             //响应成功
             if (response.isSuccessful()) {
                 return response.body();
                 ////如果状态码是400,401,429,500中的任意一个，抛出异常
             } else if (APIConstants.resultStatusArray.contains(status)) {
                 final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
-                if(result.getCode() == 0 && result.getMessage() == null){
+                if (result.getCode() == 0 && result.getMessage() == null) {
                     // System.out.println("错误码："+result.getErrorCode()+"\t错误信息"+result.getErrorMessage());
                     // System.out.println(result);
-                    throw new APIException(result.getErrorCode(),result.getErrorMessage());
-                }else{
+                    throw new APIException(result.getErrorCode(), result.getErrorMessage());
+                } else {
                     //System.out.println("错误码："+result.getCode()+"\t错误信息"+result.getMessage());
                     //抛出异常
                     //  System.out.println(result);
@@ -181,6 +197,7 @@ public class APIClient {
             throw new APIException("APIClient executeSync exception.", e);
         }
     }
+
     //输出响应（请求头，状态码，信息以及ResponseBody）
     private void printResponse(final Response response) {
         final StringBuilder responseInfo = new StringBuilder();
@@ -189,8 +206,10 @@ public class APIClient {
             final String limit = response.headers().get(HttpHeadersEnum.OK_LIMIT.header());
             if (StringUtils.isNotEmpty(limit)) {
                 responseInfo.append("\n\t\t").append("Headers: ");
-//                responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_BEFORE.header()).append(": ").append(response.headers().get(HttpHeadersEnum.OK_BEFORE.header()));
-//                responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_AFTER.header()).append(": ").append(response.headers().get(HttpHeadersEnum.OK_AFTER.header()));
+//                responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_BEFORE.header()).append(": ").append
+//                (response.headers().get(HttpHeadersEnum.OK_BEFORE.header()));
+//                responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_AFTER.header()).append(": ").append
+//                (response.headers().get(HttpHeadersEnum.OK_AFTER.header()));
                 responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_FROM.header()).append(": ").append(response.headers().get(HttpHeadersEnum.OK_FROM.header()));
                 responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_TO.header()).append(": ").append(response.headers().get(HttpHeadersEnum.OK_TO.header()));
                 responseInfo.append("\n\t\t\t").append(HttpHeadersEnum.OK_LIMIT.header()).append(": ").append(limit);
@@ -198,7 +217,7 @@ public class APIClient {
             //responseInfo.append("\n\t\t").append("返回数据: ").append(response.toString());
             responseInfo.append("\n\t\t").append("Status: ").append(response.code());
             responseInfo.append("\n\t\t").append("Message: ").append(response.message());
-            if(response.body()!=null){
+            if (response.body() != null) {
                 responseInfo.append("\n\t\t").append("Response Body: ").append(JSON.toJSONString(response.body()));
             }
         } else {
