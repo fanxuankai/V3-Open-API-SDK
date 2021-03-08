@@ -70,7 +70,7 @@ public interface OpenAPI {
 
     //获取系统时间
     @GET("/api/v5/public/time")
-    Call<Result<List<List<String>>>> time();
+    Call<Result<List<TimeVo>>> time();
 
     //获取平台公共爆仓单信息
     @GET("/api/v5/public/liquidation-orders")

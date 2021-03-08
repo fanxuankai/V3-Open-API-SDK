@@ -96,15 +96,16 @@ public class APIClient {
             }
             //获取状态码
             final int status = response.code();
-
-            //获取错误信息
-            Result<T> body = response.body();
-            if (body == null) {
-                throw new APIException("API No Body Response!!!");
-            }
-            final String message = body.getCode() + " / " + body.getMsg();
             //响应成功
-            if (response.isSuccessful() && Objects.equals(body.getCode(), 0)) {
+            if (response.isSuccessful()) {
+                //获取错误信息
+                Result<T> body = response.body();
+                if (body == null) {
+                    throw new APIException("API No Body Response!!!");
+                }
+                if (!Objects.equals(body.getCode(), 0)) {
+                    throw new APIException(body.getCode() + " / " + body.getMsg());
+                }
                 return body.getData();
                 ////如果状态码是400,401,429,500中的任意一个，抛出异常
             } else if (APIConstants.resultStatusArray.contains(status)) {
@@ -120,7 +121,7 @@ public class APIClient {
                     throw new APIException(result.getCode(), result.getMessage());
                 }
             } else {
-                throw new APIException(message);
+                throw new APIException(response.code() + " / " + response.message());
             }
         } catch (final IOException e) {
             throw new APIException("APIClient executeSync exception.", e);

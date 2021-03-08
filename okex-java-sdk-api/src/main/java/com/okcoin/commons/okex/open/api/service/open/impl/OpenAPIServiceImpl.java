@@ -16,7 +16,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
     private final OpenAPI api;
 
     public OpenAPIServiceImpl(APIConfiguration config) {
-        this.client = new APIClient(config);
+        this.client = new APIClient(config, true);
         this.api = client.createService(OpenAPI.class);
     }
 
@@ -67,7 +67,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
     }
 
     @Override
-    public List<List<String>> time() {
+    public List<TimeVo> time() {
         return client.executeSyncWithResult(api.time());
     }
 

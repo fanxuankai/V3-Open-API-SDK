@@ -47,7 +47,7 @@ public interface OpenAPIService {
     List<DiscountRateInterestFreeQuotaVo> discountRateInterestFreeQuota(String ccy);
 
     //获取系统时间
-    List<List<String>> time();
+    List<TimeVo> time();
 
     //获取平台公共爆仓单信息
     List<LiquidationOrdersVo> liquidationOrders(LiquidationOrdersDto dto);
