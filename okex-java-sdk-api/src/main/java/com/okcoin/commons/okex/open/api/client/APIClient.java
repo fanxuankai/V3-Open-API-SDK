@@ -96,11 +96,16 @@ public class APIClient {
             }
             //获取状态码
             final int status = response.code();
+
             //获取错误信息
-            final String message = response.code() + " / " + response.message();
+            Result<T> body = response.body();
+            if (body == null) {
+                throw new APIException("API No Body Response!!!");
+            }
+            final String message = body.getCode() + " / " + body.getMsg();
             //响应成功
-            if (response.isSuccessful() && response.body() != null && Objects.equals(response.body().getCode(), 0)) {
-                return response.body().getData();
+            if (response.isSuccessful() && Objects.equals(body.getCode(), 0)) {
+                return body.getData();
                 ////如果状态码是400,401,429,500中的任意一个，抛出异常
             } else if (APIConstants.resultStatusArray.contains(status)) {
                 final HttpResult result = JSON.parseObject(new String(response.errorBody().bytes()), HttpResult.class);
